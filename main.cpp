@@ -5,6 +5,11 @@
 
 const char kWindowTitle[] = "LC1B_19_ヒガシ_サチエ_評価課題";
 
+enum Scene {
+	TITLE,
+	GAME
+};
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -21,6 +26,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// プレイヤー
 	Player player;
 
+	// シーン
+	Scene scene = TITLE;
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -30,56 +38,89 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		memcpy(preKeys, keys, 256);
 		Novice::GetHitKeyStateAll(keys);
 
-		///
-		/// ↓更新処理ここから
-		///
+		switch (scene) {
 
-		// 敵の更新
-		enemy.Update();
+		case TITLE:
 
-		// プレイヤーの更新
-		player.Update(preKeys, keys);
+			if (!preKeys[DIK_RETURN] && keys[DIK_RETURN]) {
 
-		// 衝突判定
-		if (player.GetIsAlive()) {
-			if (sqrtf
-			((player.GetPos().x - enemy.GetPos().x) * (player.GetPos().x - enemy.GetPos().x) +
-				(player.GetPos().y - enemy.GetPos().y) * (player.GetPos().y - enemy.GetPos().y)) < player.GetRadius() + enemy.GetRadius()) {
+				scene = GAME;
 
-				player.SetIsAlive(false);
-			}
-		}
+				// 初期化処理
+				player.SetPos(Vector2(640.0f, 360.0f));
+				player.SetIsAlive(true);
 
-		// 弾と敵の衝突判定
-		for (int i = 0; i < 10; i++) {
-			if (player.GetBulletIsAlive(i)) {
-				if (sqrtf
-				((player.GetBulletPos(i).x - enemy.GetPos().x) * (player.GetBulletPos(i).x - enemy.GetPos().x) + 
-					(player.GetBulletPos(i).y - enemy.GetPos().y) * (player.GetBulletPos(i).y - enemy.GetPos().y)) < player.GetBulletRadius(i) + enemy.GetRadius()) {
+				enemy.SetPos(Vector2(640.0f, 200.0f));
+				enemy.SetSpeed(Vector2(5.0f, 0.0f));
+				enemy.SetIsAlive(true);
+
+				for (int i = 0; i < 10; i++) {
 
 					player.SetBulletIsAlive(i, false);
-					enemy.SetIsAlive(false);
 				}
 			}
+
+			// 文字の描画
+			Novice::ScreenPrintf(590, 330, "TITLE");
+			Novice::ScreenPrintf(590, 350, "PRESS ENTER TO START");
+
+			break;
+
+		case GAME:
+
+			// 更新処理
+
+			if (!preKeys[DIK_RETURN] && keys[DIK_RETURN]) {
+
+				scene = TITLE;
+			}
+
+			// 敵の更新
+			enemy.Update();
+
+			// プレイヤーの更新
+			player.Update(preKeys, keys);
+
+			// 衝突判定
+			if (player.GetIsAlive()) {
+
+				if (sqrtf
+				((player.GetPos().x - enemy.GetPos().x) * (player.GetPos().x - enemy.GetPos().x) +
+					(player.GetPos().y - enemy.GetPos().y) * (player.GetPos().y - enemy.GetPos().y)) < player.GetRadius() + enemy.GetRadius()) {
+
+					player.SetIsAlive(false);
+				}
+			}
+
+			// 弾と敵の衝突判定
+			for (int i = 0; i < 10; i++) {
+
+				if (player.GetBulletIsAlive(i)) {
+
+					if (sqrtf
+					((player.GetBulletPos(i).x - enemy.GetPos().x) * (player.GetBulletPos(i).x - enemy.GetPos().x) +
+						(player.GetBulletPos(i).y - enemy.GetPos().y) * (player.GetBulletPos(i).y - enemy.GetPos().y)) < player.GetBulletRadius(i) + enemy.GetRadius()) {
+
+						player.SetBulletIsAlive(i, false);
+						enemy.SetIsAlive(false);
+					}
+				}
+			}
+
+			// 描画処理
+
+			// 敵の描画
+			enemy.Draw();
+
+			// プレイヤーの描画
+			player.Draw();
+
+			// 文字の描画
+			Novice::ScreenPrintf(10, 10, "PRESS ENTER TO TITLE");
+
+			break;
 		}
 
-		///
-		/// ↑更新処理ここまで
-		///
-
-		///
-		/// ↓描画処理ここから
-		///
-
-		// 敵の描画
-		enemy.Draw();
-
-		// プレイヤーの描画
-		player.Draw();
-
-		///
-		/// ↑描画処理ここまで
-		///
 
 		// フレームの終了
 		Novice::EndFrame();

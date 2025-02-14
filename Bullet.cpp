@@ -1,4 +1,4 @@
-#include "Novice.h"
+ï»¿#include "Novice.h"
 #include "Bullet.h"
 
 Bullet::Bullet() {
@@ -17,7 +17,7 @@ Bullet::~Bullet() {
 
 void Bullet::Update() {
 
-	// ˆÚ“®ˆ—
+	// ç§»å‹•å‡¦ç†
 	if (isAlive_) {
 
 		pos_.y += speed_.y;
@@ -28,7 +28,7 @@ void Bullet::Update() {
 		}
 	}
 
-	// •œŠˆˆ—
+	// å¾©æ´»å‡¦ç†
 	if (count_ > 0) {
 
 		count_--;

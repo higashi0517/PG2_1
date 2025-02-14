@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 #include "Novice.h"
 #include "Bullet.h"
 
@@ -9,6 +9,7 @@ Player::Player() {
 	speed_.x = 5;
 	speed_.y = 5;
 	radius_ = 20.0f;
+	isAlive_ = true;
 
 	// Bullet
 	for (int i = 0; i < 10; i++) {
@@ -32,7 +33,7 @@ void Player::Update(char* preKeys, char* keys) {
 
 	if (isAlive_) {
 
-		// ˆÚ“®ˆ—
+		// ç§»å‹•å‡¦ç†
 		if (keys[DIK_A]) {
 			pos_.x -= speed_.x;
 		}
@@ -59,7 +60,7 @@ void Player::Update(char* preKeys, char* keys) {
 			pos_.x = 1280 - radius_;
 		}
 
-		// ’e‚Ì”­Ëˆ—
+		// å¼¾ã®ç™ºå°„å‡¦ç†
 		for (int i = 0; i < 10; i++) {
 
 			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
@@ -75,12 +76,15 @@ void Player::Update(char* preKeys, char* keys) {
 					}
 				}
 			}
-
-			bullet_[i]->Update();
 		}
 	}
 
-	// •œŠˆˆ—
+	for (int i = 0; i < 10; i++) {
+
+		bullet_[i]->Update();
+	}
+
+	// å¾©æ´»å‡¦ç†
 	if (!isAlive_) {
 
 		if (count_ < 0) {
@@ -159,5 +163,4 @@ void Player::SetBulletIsAlive(int i, bool setIsAlive) {
 
 	bullet_[i]->SetIsAlive(setIsAlive);
 }
-
 

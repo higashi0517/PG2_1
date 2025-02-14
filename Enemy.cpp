@@ -1,4 +1,4 @@
-#include "Enemy.h"
+ï»¿#include "Enemy.h"
 #include "Novice.h"
 
 Enemy::Enemy() {
@@ -17,7 +17,7 @@ Enemy::~Enemy() {
 
 void Enemy::Update() {
 
-	// ˆÚ“®ˆ—
+	// ç§»å‹•å‡¦ç†
 	if (isAlive_) {
 
 		pos_.x += speed_.x;
@@ -28,7 +28,7 @@ void Enemy::Update() {
 		}
 	}
 
-	// •œŠˆˆ—
+	// å¾©æ´»å‡¦ç†
 	if (!isAlive_) {
 
 		if (count_ < 0) {
